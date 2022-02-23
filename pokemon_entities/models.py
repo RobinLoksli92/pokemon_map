@@ -1,5 +1,6 @@
 from distutils.command.upload import upload
 from pyexpat import model
+from statistics import mode
 from django.db import models
 from django.forms import FloatField  # noqa F401
 
@@ -15,3 +16,4 @@ class Pokemon(models.Model):
 class PokemonEntity(models.Model):
     longitude = models.FloatField(blank=True)
     latitude = models.FloatField(blank=True)
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, default='1')
