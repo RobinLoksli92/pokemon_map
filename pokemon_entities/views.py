@@ -1,8 +1,11 @@
+from audioop import add
 import folium
 import json
 
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
+
+from pokemon_entities.models import Pokemon, PokemonEntity
 
 
 MOSCOW_CENTER = [55.751244, 37.618423]
@@ -31,21 +34,38 @@ def show_all_pokemons(request):
         pokemons = json.load(database)['pokemons']
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
+
+    pokemons = Pokemon.objects.all()
     for pokemon in pokemons:
-        for pokemon_entity in pokemon['entities']:
-            add_pokemon(
-                folium_map, pokemon_entity['lat'],
-                pokemon_entity['lon'],
-                pokemon['img_url']
-            )
+        pokemon_coords = PokemonEntity.objects.get(pokemon=pokemon)
+        add_pokemon(
+            folium_map, pokemon_coords.lat,
+            pokemon_coords.long, f'media/{pokemon.image}'
+        )
+
+    # for pokemon in pokemons:
+    #     for pokemon_entity in pokemon['entities']:
+    #         add_pokemon(
+    #             folium_map, pokemon_entity['lat'],
+    #             pokemon_entity['lon'],
+    #             pokemon['img_url']
+    #         )
 
     pokemons_on_page = []
+
     for pokemon in pokemons:
         pokemons_on_page.append({
-            'pokemon_id': pokemon['pokemon_id'],
-            'img_url': pokemon['img_url'],
-            'title_ru': pokemon['title_ru'],
+            'pokemon_id':pokemon.id,
+            'img_url': f'media/{pokemon.image}',
+            'title_ru': pokemon.title
         })
+
+    # for pokemon in pokemons:
+    #     pokemons_on_page.append({
+    #         'pokemon_id': pokemon['pokemon_id'],
+    #         'img_url': pokemon['img_url'],
+    #         'title_ru': pokemon['title_ru'],
+    #     })
 
     return render(request, 'mainpage.html', context={
         'map': folium_map._repr_html_(),
