@@ -1,4 +1,3 @@
-from audioop import add
 import folium
 import json
 
@@ -38,10 +37,16 @@ def show_all_pokemons(request):
     pokemons = Pokemon.objects.all()
     for pokemon in pokemons:
         pokemon_coords = PokemonEntity.objects.get(pokemon=pokemon)
-        add_pokemon(
-            folium_map, pokemon_coords.lat,
-            pokemon_coords.long, f'media/{pokemon.image}'
-        )
+        if pokemon.image:
+            add_pokemon(
+                folium_map, pokemon_coords.lat,
+                pokemon_coords.long, f'media/{pokemon.image}'
+            )
+        else:
+            add_pokemon(
+                folium_map, pokemon_coords.lat,
+                pokemon_coords.long,
+            )
 
     # for pokemon in pokemons:
     #     for pokemon_entity in pokemon['entities']:
@@ -54,11 +59,17 @@ def show_all_pokemons(request):
     pokemons_on_page = []
 
     for pokemon in pokemons:
-        pokemons_on_page.append({
-            'pokemon_id':pokemon.id,
-            'img_url': f'media/{pokemon.image}',
-            'title_ru': pokemon.title
-        })
+        if pokemon.image:
+            pokemons_on_page.append({
+                'pokemon_id':pokemon.id,
+                'img_url': f'media/{pokemon.image}',
+                'title_ru': pokemon.title
+            })
+        else:
+            pokemons_on_page.append({
+                'pokemon_id':pokemon.id,
+                'title_ru': pokemon.title
+            })
 
     # for pokemon in pokemons:
     #     pokemons_on_page.append({
