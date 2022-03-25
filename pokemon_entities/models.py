@@ -1,10 +1,11 @@
 from django.db import models
 from django.forms import FloatField  # noqa F401
+from django.conf import settings
 
-# your models here
+
 class Pokemon(models.Model):
     title = models.CharField(max_length=200, blank=True)
-    image = models.ImageField(upload_to='media/images', null=True, blank=True)
+    image = models.ImageField(upload_to=settings.MEDIA_ROOT, null=True, blank=True)
     appeared_at = models.DateTimeField(null=True, blank=True)
     disappeared_at = models.DateTimeField(null=True, blank=True)
     level = models.IntegerField(null=True, blank=True)
@@ -12,7 +13,7 @@ class Pokemon(models.Model):
     strength = models.IntegerField(null=True, blank=True)
     defence = models.IntegerField(null=True, blank=True)
     stamina = models.IntegerField(null=True, blank=True)
-    
+    discription = models.TextField()
 
     def __str__(self):
         return '{}'.format(self.title)
