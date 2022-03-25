@@ -4,7 +4,9 @@ from django.conf import settings
 
 
 class Pokemon(models.Model):
-    title = models.CharField(max_length=200, blank=True)
+    title_ru = models.CharField(max_length=200, blank=True)
+    title_en = models.CharField(max_length=200, blank=True)
+    title_jp = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to=settings.MEDIA_ROOT, null=True, blank=True)
     appeared_at = models.DateTimeField(null=True, blank=True)
     disappeared_at = models.DateTimeField(null=True, blank=True)
@@ -16,7 +18,7 @@ class Pokemon(models.Model):
     discription = models.TextField()
 
     def __str__(self):
-        return '{}'.format(self.title)
+        return '{}'.format(self.title_ru)
 
 
 class PokemonEntity(models.Model):
