@@ -16,8 +16,7 @@ class Pokemon(models.Model):
     defence = models.IntegerField(null=True, blank=True)
     stamina = models.IntegerField(null=True, blank=True)
     discription = models.TextField(null=True, blank=True)
-    evolution_from = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
-    # evolution_to = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    evolution_from = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='evolution_to')
 
     def __str__(self):
         return '{}'.format(self.title_ru)
