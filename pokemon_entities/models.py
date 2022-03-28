@@ -15,7 +15,9 @@ class Pokemon(models.Model):
     strength = models.IntegerField(null=True, blank=True)
     defence = models.IntegerField(null=True, blank=True)
     stamina = models.IntegerField(null=True, blank=True)
-    discription = models.TextField()
+    discription = models.TextField(null=True, blank=True)
+    evolution_from = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    # evolution_to = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return '{}'.format(self.title_ru)
@@ -25,6 +27,7 @@ class PokemonEntity(models.Model):
     lat = models.FloatField(blank=True)
     long = models.FloatField(blank=True)
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, default='1')
+    
 
     def __str__(self):
         return '{}'.format(self.pokemon)

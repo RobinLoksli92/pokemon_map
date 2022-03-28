@@ -91,7 +91,12 @@ def show_pokemon(request, pokemon_id):
         'title_jp': requested_pokemon.title_jp,
         'description': requested_pokemon.discription,
         'lat': pokemon_entity.lat, 
-        'long': pokemon_entity.long
+        'long': pokemon_entity.long,
+        'previous_evolution': {
+            'title_ru': requested_pokemon.evolution_from,
+            'pokemon_id': requested_pokemon.id ,
+            'img_url': request.build_absolute_uri(requested_pokemon.image.url)
+            }
     }
     
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
@@ -101,6 +106,13 @@ def show_pokemon(request, pokemon_id):
         pokemon['long'], pokemon['img_url']
     )
 
-    return render(request, 'pokemon.html', context={
-        'map': folium_map._repr_html_(), 'pokemon': pokemon
-    })
+    if requested_pokemon.evolution_from:
+        return render(request, 'pokemon.html', context={
+            'map': folium_map._repr_html_(), 'pokemon': pokemon
+        })
+
+    else:
+        del pokemon['previous_evolution']
+        return render(request, 'pokemon.html', context={
+            'map': folium_map._repr_html_(), 'pokemon': pokemon
+        })
