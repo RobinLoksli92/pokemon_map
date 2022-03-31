@@ -33,7 +33,6 @@ def show_all_pokemons(request):
     pokemon_entities = PokemonEntity.objects.all()
 
     for pokemon_entity in pokemon_entities:
-        print(pokemon_entity.pokemon)
         if pokemon_entity.pokemon.image:
             add_pokemon(
                 folium_map, pokemon_entity.lat,
