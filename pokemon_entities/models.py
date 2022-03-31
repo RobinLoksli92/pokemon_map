@@ -12,7 +12,7 @@ class Pokemon(models.Model):
     evolution_from = models.ForeignKey('self', verbose_name='Эволюционировал из', on_delete=models.CASCADE, null=True, blank=True, related_name='evolution_to')
 
     def __str__(self):
-        return '{}'.format(self.title_ru)
+        return self.title_ru
 
 
 class PokemonEntity(models.Model):
