@@ -36,7 +36,7 @@ def show_all_pokemons(request):
         if pokemon_entity.pokemon.image:
             add_pokemon(
                 folium_map, pokemon_entity.lat,
-                pokemon_entity.long, 
+                pokemon_entity.long,
                 request.build_absolute_uri(pokemon_entity.pokemon.image.url)
             )
         else:
@@ -51,7 +51,7 @@ def show_all_pokemons(request):
     for pokemon in pokemons:
         image_url = request.build_absolute_uri(pokemon.image.url) if pokemon.image else None
         pokemons_on_page.append({
-            'pokemon_id':pokemon.id,
+            'pokemon_id': pokemon.id,
             'img_url': image_url,
             'title_ru': pokemon.title_ru
         })
@@ -64,8 +64,9 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    requested_pokemon = Pokemon.objects.get(id = pokemon_id)
-    requested_pokemon_entities = PokemonEntity.objects.filter(pokemon = requested_pokemon)
+    requested_pokemon = Pokemon.objects.get(id=pokemon_id)
+    requested_pokemon_entities = PokemonEntity.objects.filter(
+        pokemon=requested_pokemon)
     
     for entity in requested_pokemon_entities:
         serialized_pokemon = {
@@ -74,13 +75,13 @@ def show_pokemon(request, pokemon_id):
             'title_en': requested_pokemon.title_en,
             'title_jp': requested_pokemon.title_jp,
             'description': requested_pokemon.discription,
-            'lat': entity.lat, 
-            'long': entity.long 
+            'lat': entity.lat,
+            'long': entity.long
         }
 
         add_pokemon(
-        folium_map, serialized_pokemon['lat'],
-        serialized_pokemon['long'], serialized_pokemon['img_url']
+            folium_map, serialized_pokemon['lat'],
+            serialized_pokemon['long'], serialized_pokemon['img_url']
         )
     
     next_evolutions = requested_pokemon.evolution_to.first()
@@ -94,8 +95,9 @@ def show_pokemon(request, pokemon_id):
     if requested_pokemon.evolution_from:
         serialized_pokemon['previous_evolution'] = {
             'title_ru': requested_pokemon.evolution_from,
-            'pokemon_id': requested_pokemon.evolution_from.id ,
-            'img_url': request.build_absolute_uri(requested_pokemon.evolution_from.image.url)
+            'pokemon_id': requested_pokemon.evolution_from.id,
+            'img_url': request.build_absolute_uri(
+                requested_pokemon.evolution_from.image.url)
             }
         return render(request, 'pokemon.html', context={
             'map': folium_map._repr_html_(), 'pokemon': serialized_pokemon
