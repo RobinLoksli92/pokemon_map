@@ -68,39 +68,39 @@ def show_pokemon(request, pokemon_id):
     requested_pokemon_entities = PokemonEntity.objects.filter(pokemon = requested_pokemon)
     
     for entity in requested_pokemon_entities:
-        pokemon = {
+        serialized_pokemon = {
             'img_url': request.build_absolute_uri(requested_pokemon.image.url),
             'title_ru': requested_pokemon.title_ru,
             'title_en': requested_pokemon.title_en,
             'title_jp': requested_pokemon.title_jp,
             'description': requested_pokemon.discription,
-            'lat': entity.lat , 
+            'lat': entity.lat, 
             'long': entity.long 
         }
 
         add_pokemon(
-        folium_map, pokemon['lat'],
-        pokemon['long'], pokemon['img_url']
+        folium_map, serialized_pokemon['lat'],
+        serialized_pokemon['long'], serialized_pokemon['img_url']
         )
     
-    next_evolutions = requested_pokemon.evolution_to.all()
+    next_evolutions = requested_pokemon.evolution_to.first()
     if next_evolutions:
-        pokemon['next_evolution'] = {
-            'title_ru': next_evolutions[0].title_ru,
-            'pokemon_id': next_evolutions[0].id,
-            'img_url': request.build_absolute_uri(next_evolutions[0].image.url)
+        serialized_pokemon['next_evolution'] = {
+            'title_ru': next_evolutions.title_ru,
+            'pokemon_id': next_evolutions.id,
+            'img_url': request.build_absolute_uri(next_evolutions.image.url)
             }
 
     if requested_pokemon.evolution_from:
-        pokemon['previous_evolution'] = {
+        serialized_pokemon['previous_evolution'] = {
             'title_ru': requested_pokemon.evolution_from,
             'pokemon_id': requested_pokemon.evolution_from.id ,
             'img_url': request.build_absolute_uri(requested_pokemon.evolution_from.image.url)
             }
         return render(request, 'pokemon.html', context={
-            'map': folium_map._repr_html_(), 'pokemon': pokemon
+            'map': folium_map._repr_html_(), 'pokemon': serialized_pokemon
         })
     else:
         return render(request, 'pokemon.html', context={
-            'map': folium_map._repr_html_(), 'pokemon': pokemon
+            'map': folium_map._repr_html_(), 'pokemon': serialized_pokemon
         })
