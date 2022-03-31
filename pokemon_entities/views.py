@@ -34,17 +34,17 @@ def show_all_pokemons(request):
     pokemons = Pokemon.objects.all()
 
     for pokemon in pokemons:
-        pokemon_coords = PokemonEntity.objects.get(pokemon=pokemon)
+        pokemon_entity = PokemonEntity.objects.get(pokemon=pokemon)
         
         if pokemon.image:
             add_pokemon(
-                folium_map, pokemon_coords.lat,
-                pokemon_coords.long, request.build_absolute_uri(pokemon.image.url)
+                folium_map, pokemon_entity.lat,
+                pokemon_entity.long, request.build_absolute_uri(pokemon.image.url)
             )
         else:
             add_pokemon(
-                folium_map, pokemon_coords.lat,
-                pokemon_coords.long,
+                folium_map, pokemon_entity.lat,
+                pokemon_entity.long,
             )
     pokemons_on_page = []
 
