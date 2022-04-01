@@ -100,10 +100,7 @@ def show_pokemon(request, pokemon_id):
             'img_url': request.build_absolute_uri(
                 requested_pokemon.evolution_from.image.url)
             }
-        return render(request, 'pokemon.html', context={
-            'map': folium_map._repr_html_(), 'pokemon': serialized_pokemon
-        })
-    
+            
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': serialized_pokemon
     })
